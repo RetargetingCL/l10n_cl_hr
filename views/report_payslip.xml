@@ -7,6 +7,7 @@
 					<t t-call="web.external_layout">
             <div class="page">
                 <h3 align="center">LIQUIDACION DE SUELDO</h3>
+                <h3 align="center">LIQUIDACION DE SUELDO</h3>
                 <span  t-raw="o.name"/>
 
                 <table class="table-condensed " width="100%">
@@ -14,7 +15,7 @@
                      <tr>
                         <th colspan="2" width="50%"><strong>RAZON SOCIAL:</strong></th>
                         <th colspan="2"><strong>RUT EMPRESA:</strong></th>
-                     </tr>
+                     </tr>%
                   </thead>
                   <tbody>
                       <tr>

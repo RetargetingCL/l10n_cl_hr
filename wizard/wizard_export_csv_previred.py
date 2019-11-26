@@ -254,6 +254,8 @@ class WizardExportCsvPrevired(models.TransientModel):
         _logger = logging.getLogger(__name__)
         country_company = self.env.user.company_id.country_id
         output = io.StringIO()
+        print('imprimioooo con print')
+        logging.info('imprimioooo con el logging')
         if self.delimiter_option == 'none':
             writer = csv.writer(output, delimiter=self.delimiter[self.delimiter_field_option], quoting=csv.QUOTE_NONE)
         else:

@@ -11,6 +11,7 @@ from odoo import models, api, fields
 import odoo.addons.decimal_precision as dp
 from odoo.tools.translate import _
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from odoo.exceptions import UserError
 
 class WizardExportCsvPrevired(models.TransientModel):
 
@@ -170,7 +171,7 @@ class WizardExportCsvPrevired(models.TransientModel):
         if payslip.contract_id.pension is True:
             return '0'
         elif TOTIM >=round(payslip.indicadores_id.tope_imponible_afp*payslip.indicadores_id.uf):
-            int(round(payslip.indicadores_id.tope_imponible_afp*payslip.indicadores_id.uf))      
+            return int(round(payslip.indicadores_id.tope_imponible_afp*payslip.indicadores_id.uf))      
         else:
             return int(round(TOTIM))
 
@@ -260,7 +261,7 @@ class WizardExportCsvPrevired(models.TransientModel):
         else:
             writer = csv.writer(output, delimiter=self.delimiter[self.delimiter_field_option], quotechar=self.quotechar[self.delimiter_option], quoting=csv.QUOTE_NONE)
         #Debemos colocar que tome todo el mes y no solo el día exacto TODO
-        payslip_recs = payslip_model.search([('date_from','=',self.date_from),
+        payslip_recs = payslip_model.search([('date_from','=',self.date_from),('company_id' ,'=',self.env.user.company_id.id)
                                              ])
 
         date_start = self.date_from
@@ -284,6 +285,9 @@ class WizardExportCsvPrevired(models.TransientModel):
             payslip_line_recs = payslip_line_model.search([('slip_id','=',payslip.id)])
             rut = ""
             rut_dv = ""
+
+            if not payslip.employee_id.identification_id:
+                raise UserError(_('''Falta RUT para %s .''' % (payslip.employee_id.name)))
             rut, rut_dv = payslip.employee_id.identification_id.split("-")
             rut = rut.replace('.','')
             line_employee = [self._acortar_str(rut, 11), 
@@ -331,9 +335,9 @@ class WizardExportCsvPrevired(models.TransientModel):
                              #25 Solicitud Trabajador Joven TODO SUBSIDIO JOVEN
                              "N",
                              #26
-                             payslip.contract_id.afp_id.codigo,
+                             payslip.contract_id.afp_id.codigo if payslip.contract_id.afp_id.codigo else "00",
                              #27
-                             int(self.get_imponible_afp_2(payslip and payslip[0] or False, self.get_payslip_lines_value_2(payslip,'TOTIM'), self.get_payslip_lines_value_2(payslip,'IMPLIC'))),
+                             int(self.get_imponible_afp_2(payslip and payslip[0] or False, self.get_payslip_lines_value_2(payslip,'TOTIM'), self.get_payslip_lines_value_2(payslip,'IMPLIC'))) if self.get_imponible_afp_2(payslip and payslip[0] or False, self.get_payslip_lines_value_2(payslip,'TOTIM'), self.get_payslip_lines_value_2(payslip,'IMPLIC')) else "00",
                              #AFP SIS APV 0 0 0 0 0 0
                              #28 
                              int(self.get_payslip_lines_value_2(payslip,'PREV')),
@@ -455,8 +459,8 @@ class WizardExportCsvPrevired(models.TransientModel):
                              #74 Bonos Gobierno
                              "0",
                              #7- Datos Salud ISAPRE
-                             #75 Codigo Institucion de Salud 
-                             payslip.contract_id.isapre_id.codigo,
+                             #75 Codigo Institucion de Salud. Si no consigue FONASA
+                             payslip.contract_id.isapre_id.codigo if payslip.contract_id.isapre_id.codigo else "07",
                              #76 Numero del FUN
                              " " if payslip.contract_id.isapre_id.codigo=='07' else payslip.contract_id.isapre_fun if payslip.contract_id.isapre_fun else "",
                              #77 Renta Imponible Isapre REVISAR  Tope Imponible Salud 5,201
@@ -531,7 +535,7 @@ class WizardExportCsvPrevired(models.TransientModel):
                              ]
             writer.writerow([str(l) for l in line_employee])
         self.write({'file_data': base64.encodebytes(output.getvalue().encode()),
-                    'file_name': "Previred_%s.txt" % (self.date_to),
+                    'file_name': "Previred_%s_%s.txt" % (self.date_to,datetime.now()),
                     })
                 
         return self.show_view(u'Previred Generado')

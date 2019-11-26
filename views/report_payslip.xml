@@ -196,7 +196,7 @@
                                        <span t-field="p.name"/>
                                      </t>
                                    </td>
-                                    <td style="text-align:center">
+                                    <td style="text-align:left">
                                      <t t-if=" ('Subtotal' ==p.category_id.name)">
                                        <strong><span t-esc="p.total" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></strong>
                                      </t>
@@ -222,7 +222,7 @@
                                        </t>
                                     </td>
 
-                                    <td style="text-align:center">
+                                    <td style="text-align:left">
                                      <t t-if=" ('Subtotal' ==p.category_id.name)">
                                        <strong><span t-esc="p.total" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></strong>
                                      </t>

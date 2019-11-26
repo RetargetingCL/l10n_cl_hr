@@ -7,7 +7,7 @@
 					<t t-call="web.external_layout">
             <div class="page">
                 <br/>
-                <h3 align="center" margin-top="50px;">LIQUIDACION DE SUELDO</h3>
+                <h3 align="center">LIQUIDACION DE SUELDO</h3>
                 
                 <span  t-raw="o.name"/>
 
@@ -196,7 +196,7 @@
                                        <span t-field="p.name"/>
                                      </t>
                                    </td>
-                                    <td style="text-align:right">
+                                    <td style="text-align:center">
                                      <t t-if=" ('Subtotal' ==p.category_id.name)">
                                        <strong><span t-esc="p.total" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></strong>
                                      </t>
@@ -222,7 +222,7 @@
                                        </t>
                                     </td>
 
-                                    <td style="text-align:right">
+                                    <td style="text-align:center">
                                      <t t-if=" ('Subtotal' ==p.category_id.name)">
                                        <strong><span t-esc="p.total" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></strong>
                                      </t>

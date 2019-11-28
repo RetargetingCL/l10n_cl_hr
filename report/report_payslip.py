@@ -11,6 +11,7 @@ class payslip_report(models.AbstractModel):
 #        	'get_payslip_lines': self.get_payslip_lines(),
 #            #'convert': self.convert(),
 #            'get_leave':self.get_leave(),
+
 #        })
         return payslips
 

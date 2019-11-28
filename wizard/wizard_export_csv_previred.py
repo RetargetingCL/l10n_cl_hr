@@ -299,7 +299,7 @@ class WizardExportCsvPrevired(models.TransientModel):
                              self.get_regimen_provisional(payslip.contract_id),
                              #12
                              "0",
-                             #payslip.employee_id.type_id.id_type, 
+                             #payslip.employee_id.type_id.id_type,
                              #13
                              int(self.get_dias_trabajados(payslip and payslip[0] or False)),
                              #14

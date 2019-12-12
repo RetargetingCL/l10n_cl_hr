@@ -170,7 +170,7 @@ class WizardExportCsvPrevired(models.TransientModel):
         valor = 0
         lineas = self.env['hr.payslip.line']
         detalle = lineas.search([('slip_id','=',obj.id),('code','=',regla)])
-        valor = int(detalle.amount)
+        valor = int(detalle.amount) 
         return valor        
 
     @api.model

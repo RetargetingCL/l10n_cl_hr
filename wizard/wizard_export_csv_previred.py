@@ -125,7 +125,7 @@ class WizardExportCsvPrevired(models.TransientModel):
     def validity_date_start(self, payslip):
         if payslip.date_start_mp: 
             fecha = payslip.date_start_mp.strftime("%d/%m/%Y")           
-            return fecha
+            return fecha 
         else:
             if payslip.movimientos_personal != '0' and not payslip.date_start_mp:
                 return payslip.date_from.strftime("%d/%m/%Y")   

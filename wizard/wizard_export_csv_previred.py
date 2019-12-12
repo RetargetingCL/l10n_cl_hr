@@ -124,6 +124,8 @@ class WizardExportCsvPrevired(models.TransientModel):
     @api.model
     def validity_date_start(self, payslip):
         if payslip.date_start_mp: 
+            logging.info(payslip.date_start_mp.strftime("%d/%m/%Y") )
+            logging.info('fechaaaaaaaaaaa')
             return payslip.date_start_mp.strftime("%d/%m/%Y") 
         else:
             if payslip.movimientos_personal != '0' and not payslip.date_start_mp:

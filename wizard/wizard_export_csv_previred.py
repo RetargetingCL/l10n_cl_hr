@@ -126,7 +126,7 @@ class WizardExportCsvPrevired(models.TransientModel):
         if payslip.date_start_mp:
             return payslip.date_start_mp
         else:
-            if payslip.movimientos_personal != '0':
+            if payslip.movimientos_personal != '0' and not payslip.date_start_mp:
                 return payslip.date_from.strftime("%d/%m/%Y")   
             else:
                 return '00/00/0000'
@@ -136,7 +136,7 @@ class WizardExportCsvPrevired(models.TransientModel):
         if payslip.date_end_mp:
             return payslip.date_end_mp
         else:
-            if payslip.movimientos_personal != '0':
+            if payslip.movimientos_personal != '0' and not payslip.date_end_mp:
                 return payslip.date_from.strftime("%d/%m/%Y")   
             else:
                 return '00/00/0000'

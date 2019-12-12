@@ -121,6 +121,26 @@ class WizardExportCsvPrevired(models.TransientModel):
         #03 Movimiento de Personal Afiliado Voluntario
         return '00'
 
+    @api.model
+    def validity_date_start(self, payslip):
+        if payslip.date_start_mp:
+            return payslip.date_start_mp
+        else:
+            if payslip.movimientos_personal != '0':
+                return payslip.date_from.strftime("%d/%m/%Y")   
+            else:
+                return '00/00/0000'
+
+    @api.model
+    def validity_date_end(self, payslip):
+        if payslip.date_end_mp:
+            return payslip.date_end_mp
+        else:
+            if payslip.movimientos_personal != '0':
+                return payslip.date_from.strftime("%d/%m/%Y")   
+            else:
+                return '00/00/0000'
+
 
     @api.model
     def get_tramo_asignacion_familiar(self, payslip, valor):
@@ -309,10 +329,10 @@ class WizardExportCsvPrevired(models.TransientModel):
                              #16 Fecha inicio movimiento personal (dia-mes-año)
                              #Si declara mov. personal 1, 3, 4, 5, 6, 7, 8 y 11 Fecha Desde
                              #es obligatoria y debe estar dentro del periodo de remun
-                             payslip.date_from.strftime("%d/%m/%Y") if payslip.movimientos_personal != '0' else '00/00/0000', 
+                             self.validity_date_start(payslip), 
                              #payslip.date_from if payslip.date_from else '00/00/0000', 
                              #17 Fecha fin movimiento personal (dia-mes-año)
-                             payslip.date_to.strftime("%d/%m/%Y") if payslip.movimientos_personal != '0' else '00/00/0000', 
+                             self.validity_date_end(payslip), 
                              #Si declara mov. personal 1, 3, 4, 5, 6, 7, 8 y 11 Fecha Desde
                              #es obligatoria y debe estar dentro del periodo de remun
                              #payslip.date_to if payslip.date_to else '00-00-0000', 

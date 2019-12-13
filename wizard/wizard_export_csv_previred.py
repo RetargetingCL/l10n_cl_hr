@@ -121,8 +121,11 @@ class WizardExportCsvPrevired(models.TransientModel):
         #03 Movimiento de Personal Afiliado Voluntario
         return '00'
 
+    
     @api.model
     def validity_date_start(self, payslip):
+        #metodo para validar la fecha inicial del periodo
+        #si la persona posee movimientos se coloca la fecha date_start_mp, de lo contrario la fecha del periodo
         if payslip.date_start_mp: 
             fecha = payslip.date_start_mp.strftime("%d/%m/%Y")           
             return fecha  
@@ -132,8 +135,11 @@ class WizardExportCsvPrevired(models.TransientModel):
             else:
                 return '00/00/0000' 
 
+   
     @api.model
-    def validity_date_end(self, payslip):
+    def validity_date_end(self, payslip): 
+        #metodo para validar la fecha final del periodo
+        #si la persona posee movimientos se coloca la fecha date_end_mp, de lo contrario la fecha del periodo
         if payslip.date_end_mp:
             fecha =payslip.date_end_mp.strftime("%d/%m/%Y")  
             return fecha 

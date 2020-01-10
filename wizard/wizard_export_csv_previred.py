@@ -163,7 +163,7 @@ class WizardExportCsvPrevired(models.TransientModel):
             else:
                 return 'D' 
         except:
-            return 'D'  
+            return 'D'    
             
     
     def get_payslip_lines_value(self, obj, regla):

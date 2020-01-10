@@ -163,13 +163,13 @@ class WizardExportCsvPrevired(models.TransientModel):
             else:
                 return 'D' 
         except:
-            return 'D' 
+            return 'D'  
             
     
     def get_payslip_lines_value(self, obj, regla):
         try:
             linea = obj.search([('code','=',regla)])
-            valor = int(linea.amount)  #agregue esto ahorita
+            valor = int(linea.amount)  #agregue esto ahorita para prueba
             return valor 
         except:
             return '0' 

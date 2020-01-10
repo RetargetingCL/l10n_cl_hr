@@ -121,6 +121,34 @@ class WizardExportCsvPrevired(models.TransientModel):
         #03 Movimiento de Personal Afiliado Voluntario
         return '00'
 
+    
+    @api.model
+    def validity_date_start(self, payslip):
+        #metodo para validar la fecha inicial del periodo 
+        #si la persona posee movimientos se coloca la fecha date_start_mp, de lo contrario la fecha del periodo
+        if payslip.date_start_mp: 
+            fecha = payslip.date_start_mp.strftime("%d/%m/%Y")           
+            return fecha  
+        else:
+            if payslip.movimientos_personal != '0' and not payslip.date_start_mp:
+                return payslip.date_from.strftime("%d/%m/%Y")   
+            else:
+                return '00/00/0000' 
+
+   
+    @api.model
+    def validity_date_end(self, payslip): 
+        #metodo para validar la fecha final del periodo
+        #si la persona posee movimientos se coloca la fecha date_end_mp, de lo contrario la fecha del periodo
+        if payslip.date_end_mp:
+            fecha =payslip.date_end_mp.strftime("%d/%m/%Y")  
+            return fecha 
+        else:
+            if payslip.movimientos_personal != '0' and not payslip.date_end_mp:
+                return payslip.date_from.strftime("%d/%m/%Y")   
+            else:
+                return '00/00/0000'
+
 
     @api.model
     def get_tramo_asignacion_familiar(self, payslip, valor):
@@ -135,13 +163,13 @@ class WizardExportCsvPrevired(models.TransientModel):
             else:
                 return 'D' 
         except:
-            return 'D' 
+            return 'D'    
             
     
     def get_payslip_lines_value(self, obj, regla):
         try:
             linea = obj.search([('code','=',regla)])
-            valor = linea.amount
+            valor = int(linea.amount)  #agregue esto ahorita  
             return valor 
         except:
             return '0' 
@@ -150,7 +178,7 @@ class WizardExportCsvPrevired(models.TransientModel):
         valor = 0
         lineas = self.env['hr.payslip.line']
         detalle = lineas.search([('slip_id','=',obj.id),('code','=',regla)])
-        valor = detalle.amount
+        valor = int(detalle.amount) 
         return valor        
 
     @api.model
@@ -309,10 +337,10 @@ class WizardExportCsvPrevired(models.TransientModel):
                              #16 Fecha inicio movimiento personal (dia-mes-año)
                              #Si declara mov. personal 1, 3, 4, 5, 6, 7, 8 y 11 Fecha Desde
                              #es obligatoria y debe estar dentro del periodo de remun
-                             payslip.date_from.strftime("%d/%m/%Y") if payslip.movimientos_personal != '0' else '00/00/0000', 
+                             self.validity_date_start(payslip), 
                              #payslip.date_from if payslip.date_from else '00/00/0000', 
                              #17 Fecha fin movimiento personal (dia-mes-año)
-                             payslip.date_to.strftime("%d/%m/%Y") if payslip.movimientos_personal != '0' else '00/00/0000', 
+                             self.validity_date_end(payslip), 
                              #Si declara mov. personal 1, 3, 4, 5, 6, 7, 8 y 11 Fecha Desde
                              #es obligatoria y debe estar dentro del periodo de remun
                              #payslip.date_to if payslip.date_to else '00-00-0000', 

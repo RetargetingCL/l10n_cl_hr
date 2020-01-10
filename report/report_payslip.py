@@ -6,12 +6,11 @@ class payslip_report(models.AbstractModel):
 
     @api.model
     def _get_report_values(self, docids, data=None):
-        payslips = super(payslip_report, self)._get_report_values(docids, data) 
+        payslips = super(payslip_report, self)._get_report_values(docids, data)
         #payslips.update({
 #        	'get_payslip_lines': self.get_payslip_lines(),
 #            #'convert': self.convert(),
 #            'get_leave':self.get_leave(),
-
 #        })
         return payslips
 

@@ -178,6 +178,8 @@ class WizardExportCsvPrevired(models.TransientModel):
         valor = 0
         lineas = self.env['hr.payslip.line']
         detalle = lineas.search([('slip_id','=',obj.id),('code','=',regla)])
+        if lineas.employee_id == 59:
+            logging.info()
         valor = int(detalle.amount) 
         return valor        
 
@@ -225,8 +227,17 @@ class WizardExportCsvPrevired(models.TransientModel):
             logging.info(payslip.contract_id.type_id.name)
             return 0
         elif TOTIM >=round(payslip.indicadores_id.tope_imponible_seguro_cesantia*payslip.indicadores_id.uf):
+            if payslip.employee_id == 59:
+                logging.info('elif de cesantia')
+                logging.info(payslip)
+                logging.info(int(round(payslip.indicadores_id.tope_imponible_seguro_cesantia*payslip.indicadores_id.uf)))
+
             return int(round(payslip.indicadores_id.tope_imponible_seguro_cesantia*payslip.indicadores_id.uf))
         else:
+            if payslip.employee_id == 59:
+                logging.info('else de cesantia')
+                logging.info(TOTIM)
+
             return int(round(TOTIM))
 
     @api.model

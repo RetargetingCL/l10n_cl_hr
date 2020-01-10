@@ -237,8 +237,10 @@ class WizardExportCsvPrevired(models.TransientModel):
             if payslip.employee_id.id == 59:
                 logging.info('else de cesantia')
                 logging.info(TOTIM)
+                return int(123456789)
 
-            return int(round(TOTIM))
+            else:
+                return int(round(TOTIM))
 
     @api.model
     def get_imponible_salud(self, payslip, TOTIM):

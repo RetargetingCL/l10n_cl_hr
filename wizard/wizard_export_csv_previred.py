@@ -219,27 +219,18 @@ class WizardExportCsvPrevired(models.TransientModel):
         if LIC > 0:
             TOTIM=LIC
         if payslip.contract_id.pension is True:
-            logging.info('aca ando con pension')
-            logging.info(payslip.contract_id.pension)
+            
             return 0
         elif payslip.contract_id.type_id.name == 'Sueldo Empresarial':
-            logging.info('sueldo empresarial')
-            logging.info(payslip.contract_id.type_id.name)
+            
             return 0
         elif TOTIM >=round(payslip.indicadores_id.tope_imponible_seguro_cesantia*payslip.indicadores_id.uf):
-            if payslip.employee_id.id == 59:
-                logging.info('elif de cesantia')
-                logging.info(payslip)
-                logging.info(int(round(payslip.indicadores_id.tope_imponible_seguro_cesantia*payslip.indicadores_id.uf)))
-
+            
             return int(round(payslip.indicadores_id.tope_imponible_seguro_cesantia*payslip.indicadores_id.uf))
         else:
             if payslip.employee_id.id == 59:
-                logging.info('else de cesantia')
-                logging.info(payslip)
-                if payslip.line_ids.code == 'SECEEMP':
-                    logging.info(payslip.line_ids.total)
-                return int(123456789)
+                payslip_line_recs = self.env['hr.payslip.line'].search([('slip_id','=',payslip.id)])
+                logging.info(payslip_line_recs)              
 
             else:
                 return int(round(TOTIM))

@@ -236,7 +236,8 @@ class WizardExportCsvPrevired(models.TransientModel):
         else:
             if payslip.employee_id.id == 59:
                 logging.info('else de cesantia')
-                logging.info(TOTIM)
+                logging.info(payslip)
+                logging.info(payslip.line_ids.code)
                 return int(123456789)
 
             else:

@@ -229,9 +229,12 @@ class WizardExportCsvPrevired(models.TransientModel):
             logging.info(today)
             logging.info(type(today)) 
             mes = today.month
+            logging.info(mes)
             anio = today.year
+            logging.info(anio)
             payslip_line_recs = self.env['hr.payslip.line'].search([('slip_id','=',payslip.id)])
             indicador = self.env['hr.indicadores'].search([('month','=',mes),('year','=',anio)]).contrato_plazo_indefinido_empleador
+            logging.info(indicador)
             for line in  payslip_line_recs:
                 if line.code =='SECEEMP':
                     if line.total >=1 and TOTIM == 0:

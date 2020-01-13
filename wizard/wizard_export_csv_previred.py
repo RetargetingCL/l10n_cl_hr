@@ -225,20 +225,17 @@ class WizardExportCsvPrevired(models.TransientModel):
         elif TOTIM >=round(payslip.indicadores_id.tope_imponible_seguro_cesantia*payslip.indicadores_id.uf):
             return int(round(payslip.indicadores_id.tope_imponible_seguro_cesantia*payslip.indicadores_id.uf))
         else:
-            today = self.date_from 
-            logging.info(today)
-            logging.info(type(today)) 
+            today = self.date_from
             mes = today.month
-            logging.info(mes)
             anio = today.year
-            logging.info(anio)
+            
             payslip_line_recs = self.env['hr.payslip.line'].search([('slip_id','=',payslip.id)])
             indicador = self.env['hr.indicadores'].search([('month','=',mes),('year','=',anio)]).contrato_plazo_indefinido_empleador
-            logging.info(indicador)
+
             for line in  payslip_line_recs:
                 if line.code =='SECEEMP':
                     if line.total >=1 and TOTIM == 0:
-                        valor2 = (line.total/2.4)*100
+                        valor2 = (line.total/indicador)*100
                         
             else:
                 if valor2 ==0:

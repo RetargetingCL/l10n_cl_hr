@@ -3,6 +3,7 @@ import csv
 import base64
 import logging
 import time
+from datetime import date
 from datetime import datetime
 from dateutil import relativedelta
 
@@ -224,7 +225,13 @@ class WizardExportCsvPrevired(models.TransientModel):
         elif TOTIM >=round(payslip.indicadores_id.tope_imponible_seguro_cesantia*payslip.indicadores_id.uf):
             return int(round(payslip.indicadores_id.tope_imponible_seguro_cesantia*payslip.indicadores_id.uf))
         else:
+            today = self.date_from 
+            logging.info(today)
+            logging.info(type(today)) 
+            mes = today.month
+            anio = today.year
             payslip_line_recs = self.env['hr.payslip.line'].search([('slip_id','=',payslip.id)])
+            indicador = self.env['hr.indicadores'].search([('month','=',mes),('year','=',anio)]).contrato_plazo_indefinido_empleador
             for line in  payslip_line_recs:
                 if line.code =='SECEEMP':
                     if line.total >=1 and TOTIM == 0:

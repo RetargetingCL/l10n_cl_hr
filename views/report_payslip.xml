@@ -11,7 +11,7 @@
                 
                 <span  t-raw="o.name"/>
 
-                <table class="table-condensed " width="100%">
+                <table class="table-condensed " width="100%"> 
                   <thead>
                      <tr>
                         <th colspan="2" width="50%"><strong>RAZON SOCIAL:</strong></th>

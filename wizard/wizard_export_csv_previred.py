@@ -3,6 +3,7 @@ import csv
 import base64
 import logging
 import time
+from datetime import date
 from datetime import datetime
 from dateutil import relativedelta
 
@@ -214,6 +215,7 @@ class WizardExportCsvPrevired(models.TransientModel):
 
     @api.model
     def get_imponible_seguro_cesantia(self, payslip, TOTIM, LIC):
+        valor2 = 0
         if LIC > 0:
             TOTIM=LIC
         if payslip.contract_id.pension is True:
@@ -223,7 +225,24 @@ class WizardExportCsvPrevired(models.TransientModel):
         elif TOTIM >=round(payslip.indicadores_id.tope_imponible_seguro_cesantia*payslip.indicadores_id.uf):
             return int(round(payslip.indicadores_id.tope_imponible_seguro_cesantia*payslip.indicadores_id.uf))
         else:
-            return int(round(TOTIM))
+            today = self.date_from
+            mes = today.month
+            anio = today.year
+            
+            payslip_line_recs = self.env['hr.payslip.line'].search([('slip_id','=',payslip.id)])
+            indicador = self.env['hr.indicadores'].search([('month','=',mes),('year','=',anio)]).contrato_plazo_indefinido_empleador
+
+            for line in  payslip_line_recs:
+                if line.code =='SECEEMP':
+                    if line.total >=1 and TOTIM == 0:
+                        valor2 = (line.total/indicador)*100
+                        
+            else:
+                if valor2 ==0:
+                    return int(round(TOTIM))
+                else:
+                    return int(round(valor2))
+
 
     @api.model
     def get_imponible_salud(self, payslip, TOTIM):
@@ -541,7 +560,7 @@ class WizardExportCsvPrevired(models.TransientModel):
                              int(self.get_payslip_lines_value_2(payslip,'MUT')) if self.get_payslip_lines_value_2(payslip,'MUT') else "0",
                              #99 Codigo de Sucursal (Uso Futuro)
                              "0",
-                             #10- Datos Administradora de Seguro de Cesantia
+                             #100- Datos Administradora de Seguro de Cesantia
                              self.get_imponible_seguro_cesantia(payslip and payslip[0] or False, self.get_payslip_lines_value_2(payslip,'TOTIM') , self.get_payslip_lines_value_2(payslip,'IMPLIC')),
                              #101 Aporte Trabajador Seguro Cesantia
                              int(self.get_payslip_lines_value_2(payslip,'SECE')) if self.get_payslip_lines_value_2(payslip,'SECE') else "0",
